@@ -1,0 +1,331 @@
+<!doctype html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+  <title>Closures in JS</title>
+
+  <script type="text/javascript" nonce="8590ed869194437ba03c96c45fe"
+    src="//local.adguard.org?ts=1575742506351&amp;type=content-script&amp;dmn=closures-in-js.netlify.com&amp;css=1&amp;js=1&amp;gcss=1&amp;rel=1&amp;rji=1"></script>
+  <script type="text/javascript" nonce="8590ed869194437ba03c96c45fe"
+    src="//local.adguard.org?ts=1575742506351&amp;name=AdGuard%20Assistant&amp;name=AdGuard%20Popup%20Blocker&amp;name=AdGuard%20Extra&amp;type=user-script"></script>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/theme/black.css">
+
+  <!-- Theme used for syntax highlighting of code -->
+  <link rel="stylesheet" href="lib/css/monokai.css">
+
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement('link');
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match(/print-pdf/gi) ? 'css/print/pdf.css' : 'css/print/paper.css';
+    document.getElementsByTagName('head')[0].appendChild(link);
+  </script>
+</head>
+
+<body>
+  <div class="reveal">
+    <div class="slides">
+      <section>
+        <img class="avatar" src="./assets/avatar.jpg" alt="Murat">
+        <h2><span class="colored">Shir</span>murat AKMAMEDAU</h2>
+        <a href="https://www.linkedin.com/in/murad-akmamedau/" target="_blank">LinkedIn&nbsp;&nbsp;</a>
+        <a href="https://github.com/muratx10" target="_blank">GitHub</a>
+      </section>
+      <section data-transition="convex">
+        <h2> WHAT the heck is the <span class="colored">CLOSURE</span> anyway?</h2>
+        <img class="meme" src="./assets/wtf.gif" alt="meme">
+      </section>
+      <section data-transition="convex">
+        <section>
+          <h2>The scope</h2>
+        </section>
+        <section>
+          <pre><code class="hljs" data-line-numbers="" data-trim data-noescape>
+          function foo() {
+            //The function scope
+            let count = 0;
+            console.log(count); // logs 0
+          }
+          
+          foo();
+          console.log(count); // ReferenceError: count is not defined
+          <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+          </code></pre>
+        </section>
+
+        <section>
+          <img src="./assets/code_4.jpg" alt="code fragment">
+        </section>
+        <section>
+          <p><span class='colored'>The scope</span> is a space policy that rules the accessibility of variables.</p>
+        </section>
+        <section>
+          <pre><code class="hljs" data-line-numbers="4, 10" data-trim data-noescape>
+                  function foo() {
+                    // "foo" function scope
+                    let count = 0;
+                    console.log(count); // logs 0
+                  }
+
+                  function bar() {
+                    // "bar" function scope
+                    let count = 1;
+                    console.log(count); // logs 1
+                  }
+                  
+                  foo();
+                  bar();
+                  <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+                  </code></pre>
+        </section>
+      </section data-transition="convex">
+      <section>
+        <section>
+          <h2>Scopes nesting</h2>
+        </section>
+        <section>
+          <img src="./assets/meme_3.jpg" alt="meme">
+        </section>
+        <section>
+          <p>A function is called “nested” when it is created inside another function.
+          </p>
+        </section>
+        <section>
+          <img src="./assets/code_10.jpg" alt="code">
+        </section>
+        <section>
+          <pre><code class="hljs" data-line-numbers="" data-trim data-noescape>
+                        function A() {
+                          // the outer scope
+                          let myVar = 'I am outside';
+        
+                          function B() {
+                            // the inner scope
+                            console.log(myVar); // logs "I am outside"
+                          }
+
+                          B(); //invoke function B
+                        }
+                          
+                        A();
+                          <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+                          </code></pre>
+        </section>
+        <section>
+          <p class="fragment fade-up left">- Scopes can be nested</p>
+          <p class="fragment fade-up left">- The variables of the outer scope are accessible inside the
+            inner scope
+          </p>
+        </section>
+      </section>
+      <section data-transition="convex">
+        <section>
+          <h2>The lexical scope</h2>
+        </section>
+        <section>
+          <pre><code class="hljs" data-line-numbers="" data-trim data-noescape>
+                                function A() {
+                                  // the outer scope
+                                  let myVar = 'I am outside';
+                
+                                  function B() {
+                                    // the inner scope
+                                    console.log(myVar); // logs "I am outside"
+                                  }
+        
+                                  B(); //invoke function B
+                                }
+                                  
+                                A();
+                                  <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+                                  </code></pre>
+        </section>
+        <section>
+          The <span class="colored">lexical scope</span> consists of outer scopes determined statically
+        </section>
+        <section>
+          <pre><code class="hljs" data-line-numbers="" data-trim data-noescape>
+                          const myGlobal = 0;
+
+                          function A() {
+                            const myVar = 1;
+                            console.log(myGlobal); // logs 0
+
+                            function B() {
+                              const myInnerVar = 2;
+                              console.log(myVar, myGlobal); // logs "1 0"
+                              
+                              function C() {
+                                console.log(myInnerVar, myVar, myGlobal); // logs "2 1 0"
+                              }
+
+                              C();
+                            }
+
+                            B()
+                          }
+
+                          A();
+                          <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+                          </code></pre>
+        </section>
+      </section>
+      <section data-transition="convex">
+        <section>
+          <h2>the closure</h2>
+        </section>
+        <section>
+          <img src="./assets/meme_5.jpg" alt="meme">
+        </section>
+        <section>
+          <pre><code class="hljs" data-line-numbers="" data-trim data-noescape>
+            function A() {
+              let myVar = 'I am outside';
+
+              function B() {
+                console.log(myVar); // "I am outside"
+              }
+
+              B();
+            }
+
+            A();
+            <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+          </code></pre>
+        </section>
+        <section>
+          <pre><code class="hljs" data-line-numbers="" data-trim data-noescape>
+            function A() {
+              let myVar = 'I am outside';
+                  
+              function B() {
+                console.log(myVar); // "I am outside"
+              }
+                  
+              return B();
+            }
+                  
+            const myInnerFunc = A();
+            myInnerFunc();
+            <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+          </code></pre>
+          <pre class="fragment fade-up"><code class="hljs" data-trim data-noescape>
+                      myInnerFunc(); // "I am outside"
+                      <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+                    </code></pre>
+        </section>
+        <section>
+          <p>The <span class="colored">closure</span> captures variables from lexical scope</p>
+          <img class="fragment fade-up" src="./assets/code_8.jpg" alt="code">
+        </section>
+        <section>
+          <h4>The <span class="colored">closure</span> is a function that accesses its lexical scope even executed
+            outside of its lexical scope.</h4>
+        </section>
+      </section>
+      <section data-transition="convex">
+        <section>
+          <h2><span class="colored">CLOSURE</span> examples</h2>
+        </section>
+        <section>
+          <h5>Event handler</h5>
+          <pre class="fragment fade-up"><code class="hljs" data-trim data-noescape>
+            let countClicked = 0;
+            
+            myButton.addEventListener('click', function handleClick() {
+              countClicked++;
+              myText.innerText = `You clicked ${countClicked} times`;
+            });
+            <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+          </code></pre>
+          <img class="fragment fade-up" src="./assets/movie.gif" alt="movie">
+        </section>
+        <section>
+          <h5>Callbacks</h5>
+        </section>
+        <section>
+          <pre class=""><code class="hljs" data-trim data-noescape>
+                        const message = 'Hello, World!';
+                        
+                        setTimeout(function callback() {
+                        console.log(message); // logs "Hello, World!"
+                        }, 1000);
+                        <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+                    </code></pre>
+        </section>
+        <section>
+          <pre class=""><code class="hljs" data-trim data-noescape>
+                    let countEven = 0;
+                    const items = [1, 5, 100, 10];
+                    
+                    items.forEach(function iterator(number) {
+                      if (number % 2 === 0) {
+                        countEven++;
+                      }
+                    });
+
+                    console.log(countEven);
+                    <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+                  </code></pre>
+        </section>
+        <section>
+          <h5>Functional programming</h5>
+          <pre class="fragment fade-up"><code class="hljs" data-trim data-noescape>
+            function multiply(a) {
+              return function executeMultiply(b) {
+              return a * b;
+              }
+            }
+            
+            const double = multiply(2);
+            double(3); // => 6
+            double(5); // => 10
+            
+            const triple = multiply(3);
+            triple(4); // => 12
+            
+            <script type="text/template"><!-- .slide: data-background="#ff0000" --></script>
+          </code></pre>
+        </section>
+        <section>
+          <h5>A real-world example of closure</h5>
+          <img class="fragment fade-up" src="./assets/rose.jpg" alt="rose">
+        </section>
+      </section>
+      <section data-transition="convex">
+        <img src="./assets/meme_4.jpg" alt="meme">
+      </section>
+      <section data-transition="zoom">
+        <h2><span class="colored">THANKS</span> for your attention!</h2>
+      </section>
+      <section data-transition="zoom">
+        <img src="./assets/applause.gif" alt="applause">
+      </section>
+
+    </div>
+  </div>
+
+  <script src="js/reveal.js"></script>
+
+  <script>
+    // More info about config & dependencies:
+    // - https://github.com/hakimel/reveal.js#configuration
+    // - https://github.com/hakimel/reveal.js#dependencies
+    Reveal.initialize({
+      dependencies: [
+        { src: 'plugin/markdown/marked.js' },
+        { src: 'plugin/markdown/markdown.js' },
+        { src: 'plugin/notes/notes.js', async: true },
+        { src: 'plugin/highlight/highlight.js', async: true }
+      ]
+    });
+  </script>
+</body>
+
+</html>
